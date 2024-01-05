@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>User Input Example</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script src="classDeclarations.js"></script>
+    <script src="delete.js"></script>
+    <script src="createGameInstances.js"></script>
+    <script src="functions.js"></script>
+  </head>
+  <body>
+    <div class="outer-container">
+      <div id="gameboard-space">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div id="gameboard"></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div id="pieces-container">
+        <div id="pieces-list"></div>
+      </div>
+    </div>
+    <label for="difficulty">Select Difficulty:</label>
+    <select id="difficulty" name="difficulty">
+      <option value="0">Easy</option>
+      <option value="1">Medium</option>
+      <option value="2">Hard</option>
+      <option value="3">Insane</option>
+    </select>
+
+    <!--<label for="board-size">Select Board Size:</label>
+    <select id="board-size" name="board-size">
+      <option value="5">5x5</option>
+      <option value="6">6x6</option>
+    </select> -->
+    <br />
+    <button id="generate-new-board-button">Generate new board</button>
+
+    <script src="game.js"></script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+shift alt f is how you choose your formatter here
+
+
+The #Region directive lets you specify a block of code that you can expand or collapse when usin
+
+//THIS IS IN THE WORKS FOR NOW... LEARN MORE ABOUT THIS LATER
+// const dragElement = document.getElementById("displayPiece1");
+// const dragImage = new Image();
+// dragImage.src = "mateus.png";
+// dragImage.width = 200;
+// dragElement.addEventListener("dragstart", (event) => {
+//   // Create a custom drag image
+
+//   // Set the width of the custom image
+//   // Set the custom drag image using setDragImage
+//   event.dataTransfer.setDragImage(dragImage, 10, 10);
+// });

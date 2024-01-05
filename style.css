@@ -1,0 +1,123 @@
+/* outter most container */
+.outer-container {
+    display: grid;
+    grid-template-columns: 30rem 35rem;
+    grid-template-rows: 35rem;
+}
+/* the two containers in the outter most container */
+#gameboard {
+    display: grid;
+    grid-template-rows:5rem 5rem 5rem 5rem 5rem;
+    grid-template-columns:5rem 5rem 5rem 5rem 5rem;
+}
+#gameboard-space{
+    display: grid;
+    grid-template-columns: 2.5rem 25rem 2.5rem;
+    grid-template-rows: 5rem 25rem 5rem;
+    background-color: blueviolet;
+}
+
+#pieces-container{
+    background-color:#5c1712;
+}
+/* extra stuff below */
+#pieces-list {
+    display: grid;
+    grid-template-columns: 10rem 10rem 10rem;
+    grid-template-rows: 10rem 10rem 10rem;
+}
+
+.piecelayout5 {
+    display: grid;
+    grid-template-rows:2rem 2rem 2rem 2rem 2rem;
+    grid-template-columns:2rem 2rem 2rem 2rem 2rem;
+}
+
+.piecelayout3{
+    display: grid;
+    grid-template-rows:2rem 2rem 2rem;
+    grid-template-columns:2rem 2rem 2rem;
+    background-color: rgb(100, 150, 100);
+}
+
+.pieceDisplay{
+    border: .2rem solid lightgray;
+}
+
+.item{
+    border: .2rem solid lightgray;
+}
+.p1.nopiece{
+    background-color: rgb(255, 75, 75);
+}
+.p2.nopiece{
+    background-color: rgb(75, 75, 255);
+}
+.p3.nopiece{
+    background-color: rgb(75, 255, 75);
+}
+.p4.nopiece{
+    background-color: #ffff77;
+}
+.p5.nopiece{
+    background-color: #ff66ff;
+}
+.p6.nopiece{
+    background-color: #f5ab5f;
+}
+.p7.nopiece{
+    background-color: #5a2f91;
+}
+.p8.nopiece{
+    background-color: #6be8db;
+}
+.invalid.item{
+    background-color: rgb(45, 45, 45);
+}
+.nopiece{
+    background-color:gray;
+}
+.piece1{
+    background-color: rgb(255, 0, 0);
+}
+.piece2{
+    background-color: rgb(0,0,255);
+}
+.piece3{
+    background-color: #00FF00;
+}
+.piece4{
+    background-color: #eeee22;
+}
+.piece5{
+    background-color: #ff00ff;
+}
+.piece6{
+    background-color: #e0903f;
+}
+.piece7{
+    background-color: #32105e;
+}
+.piece8{
+    background-color: #32b3a6;
+}
+.draggable {
+    cursor: pointer;
+}
+
+#difficulty{
+    background-color: black;
+    font-size: 2rem;
+    color: white;
+}
+#board-size{
+    background-color: black;
+    font-size: 2rem;
+    color: white;
+}
+label{
+    font-size: 2rem;
+}
+button{
+    font-size: 2rem;
+}

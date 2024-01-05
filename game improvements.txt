@@ -1,0 +1,50 @@
+Ideas on how to better improve game for the future
+
+- Drag it to the side better
+- Imrprove on the overall visuals of the game
+- Have the pieces create a picture
+- People have been saying they like the tetris idea (don't know how hard it is to implement)
+- Might want to have the ability to implment rotate/flip feature when it comes to the pieces
+- put the pieces more centered to the board, had some people comment that it looked cut offf
+- win screen at the end
+- color pallete should be toned down/duller pastel
+- make user interface more addictive, add sounds, win screen, points
+- when dragging a remaing piece from the bottom, change the displacement so that it goes to the bottom
+(the reason for this is so that the user can automatically see the piece on the board as colored and it Might
+be more intuitive)
+- color randomizer for pieces 
+
+
+
+
+
+
+
+
+
+Cabeça - Head
+Olhos - Eyes
+Orelhas - Ears
+Nariz - Nose
+Boca - Mouth
+Pescoço - Neck
+Ombros - Shoulders
+Braços - Arms
+Cotovelos - Elbows
+Mãos - Hands
+Dedos - Fingers
+Peito - Chest
+Barriga - Stomach
+Costas - Back
+Cintura - Waist
+Quadril - Hips
+Pernas - Legs
+Coxas - Thighs
+Joelhos - Knees
+Canelas - Shins
+Pés - Feet
+Dedos dos pés - Toes
+Unhas - Nails
+Pele - Skin
+Cabelo - Hair
+Sobrancelhas - Eyebrows
