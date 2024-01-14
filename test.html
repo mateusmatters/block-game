@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Touch Drag Example</title>
+    <style>
+      #draggable {
+        width: 100px;
+        height: 100px;
+        background-color: #3498db;
+        position: absolute;
+        touch-action: none;
+      }
+
+      #background1,
+      #background2 {
+        width: 200px;
+        height: 200px;
+        position: absolute;
+        top: 50px;
+        left: 50px;
+        background-color: rgba(255, 0, 0, 0.5);
+      }
+
+      #background2 {
+        left: 300px;
+        background-color: rgba(0, 255, 0, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="background1"></div>
+    <div id="background2"></div>
+    <div id="draggable"></div>
+
+    <script>
+      var draggable = document.getElementById("draggable");
+      var background1 = document.getElementById("background1");
+      var background2 = document.getElementById("background2");
+
+      var offsetX, offsetY;
+
+      draggable.addEventListener("touchstart", function (e) {
+        var touch = e.touches[0];
+        offsetX = touch.clientX - draggable.getBoundingClientRect().left;
+        offsetY = touch.clientY - draggable.getBoundingClientRect().top;
+      });
+
+      draggable.addEventListener("touchmove", function (e) {
+        e.preventDefault();
+        var touch = e.touches[0];
+        var x = touch.clientX - offsetX;
+        var y = touch.clientY - offsetY;
+        draggable.style.left = x + "px";
+        draggable.style.top = y + "px";
+
+        // Check if the draggable div is on top of background1 or background2
+        var background1Rect = background1.getBoundingClientRect();
+        var background2Rect = background2.getBoundingClientRect();
+
+        if (isInsideRect(touch.clientX, touch.clientY, background1Rect)) {
+          console.log("Draggable is on top of Background 1");
+        } else if (
+          isInsideRect(touch.clientX, touch.clientY, background2Rect)
+        ) {
+          console.log("Draggable is on top of Background 2");
+        }
+      });
+
+      // Helper function to check if a point is inside a rectangle
+      function isInsideRect(x, y, rect) {
+        return (
+          x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
+        );
+      }
+    </script>
+  </body>
+</html>

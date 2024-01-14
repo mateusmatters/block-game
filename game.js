@@ -5,6 +5,12 @@ let displacement = new Coordinate(0, 0);
 let mouseDownLast = false;
 let beatGame = false;
 
+let potentialLastItemTouched = null;
+beginningMove = 0;
+
+//for touchscreen purposes
+var offsetX, offsetY;
+
 //game isntances
 
 //#region
@@ -39,8 +45,265 @@ document.getElementById("pieces-container").addEventListener("drop", (e) => {
 });
 //#endregion
 
+//NEW STUFF
+function eventListenersForPiecesUpdater() {
+  const piecesNewStuff = document.querySelectorAll(".piecelayout5");
+  piecesNewStuff.forEach((piece) => {
+    piece.addEventListener("touchstart", (e) => {
+      currDrag = parseInt(piece.id.charAt(12));
+      var touch = e.touches[0];
+      offsetX = touch.clientX - piece.getBoundingClientRect().left;
+      offsetY = touch.clientY - piece.getBoundingClientRect().top;
+    });
+    piece.addEventListener("touchmove", (e) => {
+      e.preventDefault();
+      var touch = e.touches[0];
+      var x = touch.clientX - offsetX;
+      var y = touch.clientY - offsetY;
+      let touchingItem = whatItemAmITouchingOver(x, y);
+
+      if (touchingItem !== null) {
+        if (beginningMove === 0) {
+          potentialLastItemTouched = touchingItem;
+          beginningMove = 1;
+          //set the color of the piece up beginning (drag over)
+          let findAugCords = canPutPieceOnBoardAtCoordinate(
+            movingOrRemainingPiece(currDrag).piece,
+            basicBoard,
+            getCurrentCoordinate(touchingItem).displacePiece(displacement)
+          );
+          let classNameToAdd =
+            findAugCords.errorCode === SUCCESSFUL ? "p" + currDrag : "invalid";
+          findAugCords.augPiece.coordinates.forEach((currentCoordinate) => {
+            document
+              .getElementById(currentCoordinate.str)
+              .classList.add(classNameToAdd);
+          });
+          //set the color of the piece up end
+        }
+        if (touchingItem !== potentialLastItemTouched) {
+          // console.log(
+          //   "switched from item" +
+          //     potentialLastItemTouched.id +
+          //     "to item" +
+          //     touchingItem.id
+          // );
+
+          //get rid of the last piece beginning (drag leave)
+          let findAugCords2 = canPutPieceOnBoardAtCoordinate(
+            movingOrRemainingPiece(currDrag).piece,
+            basicBoard,
+            getCurrentCoordinate(potentialLastItemTouched).displacePiece(
+              displacement
+            )
+          );
+          findAugCords2.augPiece.coordinates.forEach((cood) => {
+            document.getElementById(cood.str).classList.remove("p" + currDrag);
+            document.getElementById(cood.str).classList.remove("invalid");
+          });
+          //get rid of the last piece end
+
+          //set the color of the piece up beginning (drag over)
+          let findAugCords = canPutPieceOnBoardAtCoordinate(
+            movingOrRemainingPiece(currDrag).piece,
+            basicBoard,
+            getCurrentCoordinate(touchingItem).displacePiece(displacement)
+          );
+          let classNameToAdd =
+            findAugCords.errorCode === SUCCESSFUL ? "p" + currDrag : "invalid";
+          findAugCords.augPiece.coordinates.forEach((currentCoordinate) => {
+            document
+              .getElementById(currentCoordinate.str)
+              .classList.add(classNameToAdd);
+          });
+          //set the color of the piece up end
+          potentialLastItemTouched = touchingItem;
+        }
+      } else {
+        if (potentialLastItemTouched !== null) {
+          //get rid of the last piece beginning (drag leave)
+          let findAugCords2 = canPutPieceOnBoardAtCoordinate(
+            movingOrRemainingPiece(currDrag).piece,
+            basicBoard,
+            getCurrentCoordinate(potentialLastItemTouched).displacePiece(
+              displacement
+            )
+          );
+          findAugCords2.augPiece.coordinates.forEach((cood) => {
+            document.getElementById(cood.str).classList.remove("p" + currDrag);
+            document.getElementById(cood.str).classList.remove("invalid");
+          });
+          //get rid of the last piece end
+        }
+        potentialLastItemTouched = null;
+        beginningMove = 0;
+        if (potentialLastItemTouched !== null) {
+          //get rid of the last piece beginning (drag leave)
+          let findAugCords2 = canPutPieceOnBoardAtCoordinate(
+            movingOrRemainingPiece(currDrag).piece,
+            basicBoard,
+            getCurrentCoordinate(potentialLastItemTouched).displacePiece(
+              displacement
+            )
+          );
+          findAugCords2.augPiece.coordinates.forEach((cood) => {
+            document.getElementById(cood.str).classList.remove("p" + currDrag);
+            document.getElementById(cood.str).classList.remove("invalid");
+          });
+          //get rid of the last piece end
+        }
+      }
+    });
+    piece.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      if (potentialLastItemTouched !== null) {
+        placePieceFunctionality(potentialLastItemTouched);
+        if (beatGame !== true && basicBoard.boardComplete()) {
+          alert(
+            "You won the game! Refresh the webpage to play on a new board or click on the buttons below to adjust the difficulty/size of the board."
+          );
+          beatGame = true;
+        }
+      }
+    });
+  });
+}
+//END OF NEW STUFF
+
 const items = document.querySelectorAll(".item");
 items.forEach((item) => {
+  item.addEventListener("touchstart", (e) => {
+    if (item.draggable === true) {
+      //the 1st index in the classlist will have the piecenumber: example "piece4"
+      currDrag = parseInt(item.classList[1].charAt(5));
+      let pieceOnBoard = movePlacedPieceOnBoard(currDrag);
+      prevItem = item;
+      movingPiece = pieceOnBoard.returnedPiece;
+      mouseDownLast = true;
+      displacement = getCurrentCoordinate(item).findDisplacementCoordinate(
+        pieceOnBoard.baseCoordinate
+      );
+    }
+  });
+  item.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+    var touch = e.touches[0];
+    var x = touch.clientX - offsetX;
+    var y = touch.clientY - offsetY;
+    let touchingItem = whatItemAmITouchingOver(x, y);
+    // if (touchingItem !== null) {
+    //   console.log(
+    //     "item" +
+    //       item.id +
+    //       " is moving and we are currently touching item " +
+    //       touchingItem.id
+    //   );
+    // }
+    if (touchingItem !== null) {
+      if (beginningMove === 0) {
+        potentialLastItemTouched = touchingItem;
+        beginningMove = 1;
+        //set the color of the piece up beginning (drag over)
+        let findAugCords = canPutPieceOnBoardAtCoordinate(
+          movingOrRemainingPiece(currDrag).piece,
+          basicBoard,
+          getCurrentCoordinate(touchingItem).displacePiece(displacement)
+        );
+        let classNameToAdd =
+          findAugCords.errorCode === SUCCESSFUL ? "p" + currDrag : "invalid";
+        findAugCords.augPiece.coordinates.forEach((currentCoordinate) => {
+          document
+            .getElementById(currentCoordinate.str)
+            .classList.add(classNameToAdd);
+        });
+        //set the color of the piece up end
+      }
+      if (touchingItem !== potentialLastItemTouched) {
+        // console.log(
+        //   "switched from item" +
+        //     potentialLastItemTouched.id +
+        //     "to item" +
+        //     touchingItem.id
+        // );
+
+        //get rid of the last piece beginning (drag leave)
+        let findAugCords2 = canPutPieceOnBoardAtCoordinate(
+          movingOrRemainingPiece(currDrag).piece,
+          basicBoard,
+          getCurrentCoordinate(potentialLastItemTouched).displacePiece(
+            displacement
+          )
+        );
+        findAugCords2.augPiece.coordinates.forEach((cood) => {
+          document.getElementById(cood.str).classList.remove("p" + currDrag);
+          document.getElementById(cood.str).classList.remove("invalid");
+        });
+        //get rid of the last piece end
+
+        //set the color of the piece up beginning (drag over)
+        let findAugCords = canPutPieceOnBoardAtCoordinate(
+          movingOrRemainingPiece(currDrag).piece,
+          basicBoard,
+          getCurrentCoordinate(touchingItem).displacePiece(displacement)
+        );
+        let classNameToAdd =
+          findAugCords.errorCode === SUCCESSFUL ? "p" + currDrag : "invalid";
+        findAugCords.augPiece.coordinates.forEach((currentCoordinate) => {
+          document
+            .getElementById(currentCoordinate.str)
+            .classList.add(classNameToAdd);
+        });
+        //set the color of the piece up end
+        potentialLastItemTouched = touchingItem;
+      }
+    } else {
+      if (potentialLastItemTouched !== null) {
+        //get rid of the last piece beginning (drag leave)
+        let findAugCords2 = canPutPieceOnBoardAtCoordinate(
+          movingOrRemainingPiece(currDrag).piece,
+          basicBoard,
+          getCurrentCoordinate(potentialLastItemTouched).displacePiece(
+            displacement
+          )
+        );
+        findAugCords2.augPiece.coordinates.forEach((cood) => {
+          document.getElementById(cood.str).classList.remove("p" + currDrag);
+          document.getElementById(cood.str).classList.remove("invalid");
+        });
+        //get rid of the last piece end
+      }
+      potentialLastItemTouched = null;
+      beginningMove = 0;
+      if (potentialLastItemTouched !== null) {
+        //get rid of the last piece beginning (drag leave)
+        let findAugCords2 = canPutPieceOnBoardAtCoordinate(
+          movingOrRemainingPiece(currDrag).piece,
+          basicBoard,
+          getCurrentCoordinate(potentialLastItemTouched).displacePiece(
+            displacement
+          )
+        );
+        findAugCords2.augPiece.coordinates.forEach((cood) => {
+          document.getElementById(cood.str).classList.remove("p" + currDrag);
+          document.getElementById(cood.str).classList.remove("invalid");
+        });
+        //get rid of the last piece end
+      }
+    }
+  });
+  item.addEventListener("touchend", (e) => {
+    if (potentialLastItemTouched !== null) {
+      placePieceFunctionality(potentialLastItemTouched);
+      if (beatGame !== true && basicBoard.boardComplete()) {
+        alert(
+          "You won the game! Refresh the webpage to play on a new board or click on the buttons below to adjust the difficulty/size of the board."
+        );
+        beatGame = true;
+      }
+    } else {
+    }
+  });
+
   item.addEventListener("dragover", (e) => {
     if (currDrag !== null) {
       e.preventDefault();
@@ -149,6 +412,8 @@ function placePieceFunctionality(item) {
   displacement = new Coordinate(0, 0);
   mouseDownLast = false;
   prevDrag = null;
+  const piecesNewStuff = document.querySelectorAll(".piecelayout5");
+  eventListenersForPiecesUpdater();
 }
 
 function generateNewGame(numRows, numCols, numGamePieces) {
@@ -158,19 +423,23 @@ function generateNewGame(numRows, numCols, numGamePieces) {
   usedPieces = new PiecesList();
   updateDomBoard();
   updateLists();
+  eventListenersForPiecesUpdater();
 }
 
-//THE ONE THAT WORKS
-//mousedown 44
-//dragover 44 //not detected in 2nd
-//dragleave 44 //not detected in 2nd
-//dragover 43
+function whatItemAmITouchingOver(x, y) {
+  for (let i = 0; i < 5; i++) {
+    for (let j = 0; j < 5; j++) {
+      const itemId = `${i}${j}`;
+      const itemRect = document.getElementById(itemId).getBoundingClientRect();
 
-//THE ONE THAT DOESN'T WORK
-//mousedown 44
-//dragover 43
+      if (isInsideThisItem(x, y, itemRect)) {
+        return document.getElementById(itemId);
+      }
+    }
+  }
 
-//WHAT I NEED TO MAKE 2ND ONE WORK
-//mousedown 44
-//dragleave 44
-//dragover 43
+  return null;
+}
+function isInsideThisItem(x, y, item) {
+  return x >= item.left && x <= item.right && y >= item.top && y <= item.bottom;
+}
