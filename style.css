@@ -5,10 +5,15 @@
   grid-template-rows: 35rem;
 }
 /* the two containers in the outter most container */
-#gameboard {
+#gameboard-five {
   display: grid;
   grid-template-rows: 5rem 5rem 5rem 5rem 5rem;
   grid-template-columns: 5rem 5rem 5rem 5rem 5rem;
+}
+#gameboard-six {
+  display: grid;
+  grid-template-rows: 4rem 4rem 4rem 4rem 4rem 4rem;
+  grid-template-columns: 4rem 4rem 4rem 4rem 4rem 4rem;
 }
 #gameboard-space {
   display: grid;
@@ -34,10 +39,10 @@
   touch-action: none;
 }
 
-.piecelayout3 {
+.piecelayout6 {
   display: grid;
-  grid-template-rows: 2rem 2rem 2rem;
-  grid-template-columns: 2rem 2rem 2rem;
+  grid-template-rows: 2rem 2rem 2rem 2rem 2rem 2rem;
+  grid-template-columns: 2rem 2rem 2rem 2rem 2rem 2rem;
   background-color: rgb(100, 150, 100);
   touch-action: none;
 }

@@ -142,3 +142,71 @@ function getCurrentCoordinate(item) {
     parseInt(item.id) % 10
   );
 }
+
+function placePieceFunctionality(item) {
+  let didItPut = putPieceOnBoard(
+    getCurrentCoordinate(item).displacePiece(displacement),
+    movingOrRemainingPiece(currDrag)
+  );
+  didItPut.augPiece.coordinates.forEach((cood) => {
+    let currItem = document.getElementById(cood.str);
+    currItem.classList.remove("p" + currDrag);
+    currItem.classList.remove("invalid");
+
+    if (didItPut.errorCode === SUCCESSFUL) {
+      currItem.draggable = true;
+    }
+  });
+
+  //the following for loop updates all pieces on the DOM board so that only
+  //the items that contains pieces are draggable
+  for (let i = 0; i < basicBoard.numRows; i++) {
+    for (let j = 0; j < basicBoard.numCols; j++) {
+      let currItem = document.getElementById(`${i}${j}`);
+      if (currItem.classList.contains("nopiece")) {
+        currItem.draggable = false;
+      }
+    }
+  }
+  currDrag = null;
+  movingPiece = null;
+  displacement = new Coordinate(0, 0);
+  mouseDownLast = false;
+  prevDrag = null;
+  const piecesNewStuff = document.querySelectorAll(".piecelayout5");
+  eventListenersForPiecesUpdater();
+  if (beatGame !== true && basicBoard.boardComplete()) {
+    alert(
+      "You won the game! Refresh the webpage to play on a new board or click on the buttons below to adjust the difficulty/size of the board."
+    );
+    beatGame = true;
+  }
+}
+
+function generateNewGame(numRows, numCols, numGamePieces) {
+  beatGame = false;
+  basicBoard = new GameBoard(numRows, numCols);
+  remainingPieces = generateRandomPieces(numRows, numCols, numGamePieces);
+  usedPieces = new PiecesList();
+  updateDomBoard();
+  updateLists();
+  eventListenersForPiecesUpdater();
+}
+
+function whatItemAmITouchingOver(x, y) {
+  for (let i = 0; i < 5; i++) {
+    for (let j = 0; j < 5; j++) {
+      const itemId = `${i}${j}`;
+      const itemRect = document.getElementById(itemId).getBoundingClientRect();
+
+      if (isInsideThisItem(x, y, itemRect)) {
+        return document.getElementById(itemId);
+      }
+    }
+  }
+
+  return null;
+}
+function isInsideThisItem(x, y, item) {
+  return x >= item.left && x <= item.right && y >= item.top && y <= item.bottom;
+}

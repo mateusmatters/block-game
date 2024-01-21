@@ -11,21 +11,21 @@
   <body>
     <div class="outer-container">
       <div id="gameboard-space">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div id="gameboard"></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+        <div class ="surrounding-gameboard"></div>
+        <div class ="surrounding-gameboard"></div>
+        <div class ="surrounding-gameboard"></div>
+        <div class ="surrounding-gameboard"></div>
+        <div id="gameboard-five"></div>
+        <div class ="surrounding-gameboard"></div>
+        <div class ="surrounding-gameboard"></div>
+        <div class ="surrounding-gameboard"></div>
+        <div class ="surrounding-gameboard"></div>
       </div>
       <div id="pieces-container">
         <div id="pieces-list"></div>
       </div>
-    </div>
-    <label for="difficulty">Select Difficulty:</label>
+    <div id = "game-buttons">
+      <label for="difficulty">Select Difficulty:</label>
     <select id="difficulty" name="difficulty">
       <option value="0">Easy</option>
       <option value="1">Medium</option>
@@ -40,7 +40,7 @@
     </select>
     <br />
     <button id="generate-new-board-button">Generate new board</button>
-
+    </div>
     <script src="game.js"></script>
   </body>
 </html>
