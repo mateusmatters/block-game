@@ -13,6 +13,12 @@
 //away from each other, with the only difference being the location of the GamePiece
 //(example: a piece with coordinates [(0,0)], (0,1)], (0,2)] could be augmented to be [(100,0)], (100,1)], (100,2)])
 
+let basicBoard = new GameBoard(5, 5);
+let PIECE_NAMES = ["nopiece"];
+for (let i = 1; i <= 9; i++) {
+  PIECE_NAMES.push(`piece${i}`);
+}
+
 function canPutPieceOnBoardAtCoordinate(piece, board, placementCood) {
   let augmentedCoods = new Array();
   let errorCode = SUCCESSFUL;

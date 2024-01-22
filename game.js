@@ -10,12 +10,12 @@ var offsetX, offsetY;
 let potentialLastItemTouched = null;
 beginningMove = 0;
 touchAndMove = false;
-
-//game isntances
+let defaultNumRowsAndCols = 5;
+let defaultNumPieces = 5;
 
 //#region
 document.getElementById("gameboard-five").innerHTML = basicBoard.htmlString;
-generateNewGame(5, 5, 5);
+generateNewGame(defaultNumRowsAndCols, defaultNumRowsAndCols, defaultNumPieces);
 
 document
   .getElementById("generate-new-board-button")
