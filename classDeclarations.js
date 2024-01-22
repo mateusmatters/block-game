@@ -49,14 +49,14 @@ function create2DArray(row, col) {
   return result;
 }
 
-function htmlPieceString(coods, id) {
-  let temp = `<div id= "displayPiece${id}" class="piecelayout5" draggable="true">`;
+function htmlPieceString(coods, id, sizeBoard) {
+  let temp = `<div id= "displayPiece${id}" class="piecelayout${sizeBoard}" draggable="true">`;
   let minRow = findMinAndMax(coods)[MINROW];
   let altCoods = coods.map(function (cood) {
     return new Coordinate(cood.rowPoint - minRow, cood.colPoint);
   });
-  for (let rowItt = 0; rowItt < 5; rowItt++) {
-    for (let colItt = 0; colItt < 5; colItt++) {
+  for (let rowItt = 0; rowItt < sizeBoard; rowItt++) {
+    for (let colItt = 0; colItt < sizeBoard; colItt++) {
       if (containsPoint(rowItt, colItt, altCoods)) {
         temp = temp + `<div class = "pieceDisplay piece${id}"></div>`;
       } else {
@@ -121,10 +121,10 @@ class Coordinate {
 }
 //for the sake of our game, the (0,0) piece will always be the piece highest up row in the most left column
 class GamePiece {
-  constructor(coordinates, id) {
+  constructor(coordinates, id, sizeBoard) {
     this.coordinates = coordinates;
     this.id = id;
-    this.gridString = htmlPieceString(coordinates, id);
+    this.gridString = htmlPieceString(coordinates, id, sizeBoard);
     let temp = findMinAndMax(coordinates);
     this.minRow = temp[MINROW];
     this.maxRow = temp[MAXROW];

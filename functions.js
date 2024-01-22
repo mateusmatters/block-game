@@ -13,11 +13,19 @@
 //away from each other, with the only difference being the location of the GamePiece
 //(example: a piece with coordinates [(0,0)], (0,1)], (0,2)] could be augmented to be [(100,0)], (100,1)], (100,2)])
 
-let basicBoard = new GameBoard(5, 5);
+let defaultNumRows = 5;
+let defaultNumCols = 5;
+let defaultNumPieces = 5;
+let basicBoard = new GameBoard(defaultNumRows, defaultNumCols);
 let PIECE_NAMES = ["nopiece"];
 for (let i = 1; i <= 9; i++) {
   PIECE_NAMES.push(`piece${i}`);
 }
+let remainingPieces = new PiecesList();
+
+let potentialLastItemTouched = null;
+let beginningMove = 0;
+var offsetX, offsetY;
 
 function canPutPieceOnBoardAtCoordinate(piece, board, placementCood) {
   let augmentedCoods = new Array();
@@ -47,7 +55,7 @@ function canPutPieceOnBoardAtCoordinate(piece, board, placementCood) {
   }
   return {
     errorCode: errorCode,
-    augPiece: new GamePiece(augmentedCoods, piece.id),
+    augPiece: new GamePiece(augmentedCoods, piece.id, basicBoard.numRows),
   };
 }
 
@@ -68,9 +76,10 @@ function updateDomBoard() {
 }
 
 function updateLists() {
+  let tempStr = ".piecelayout" + basicBoard.numRows;
   document.getElementById("pieces-list").innerHTML =
     remainingPieces.htmlString();
-  let draggablePieces = document.querySelectorAll(".piecelayout5");
+  let draggablePieces = document.querySelectorAll(tempStr);
   draggablePieces.forEach(function (draggablePiece) {
     draggablePiece.addEventListener("dragstart", (event) => {
       //turns string "displayPieceX" to only the number X when assigning to currDrag
@@ -150,6 +159,7 @@ function getCurrentCoordinate(item) {
 }
 
 function placePieceFunctionality(item) {
+  let tempStr = ".piecelayout" + 5;
   let didItPut = putPieceOnBoard(
     getCurrentCoordinate(item).displacePiece(displacement),
     movingOrRemainingPiece(currDrag)
@@ -179,7 +189,7 @@ function placePieceFunctionality(item) {
   displacement = new Coordinate(0, 0);
   mouseDownLast = false;
   prevDrag = null;
-  const piecesNewStuff = document.querySelectorAll(".piecelayout5");
+  const piecesNewStuff = document.querySelectorAll(tempStr);
   eventListenersForPiecesUpdater();
   if (beatGame !== true && basicBoard.boardComplete()) {
     alert(
@@ -189,19 +199,9 @@ function placePieceFunctionality(item) {
   }
 }
 
-function generateNewGame(numRows, numCols, numGamePieces) {
-  beatGame = false;
-  basicBoard = new GameBoard(numRows, numCols);
-  remainingPieces = generateRandomPieces(numRows, numCols, numGamePieces);
-  usedPieces = new PiecesList();
-  updateDomBoard();
-  updateLists();
-  eventListenersForPiecesUpdater();
-}
-
-function whatItemAmITouchingOver(x, y) {
-  for (let i = 0; i < 5; i++) {
-    for (let j = 0; j < 5; j++) {
+function whatItemAmITouchingOver(x, y, numRowsAndCols) {
+  for (let i = 0; i < numRowsAndCols; i++) {
+    for (let j = 0; j < numRowsAndCols; j++) {
       const itemId = `${i}${j}`;
       const itemRect = document.getElementById(itemId).getBoundingClientRect();
 
@@ -215,4 +215,211 @@ function whatItemAmITouchingOver(x, y) {
 }
 function isInsideThisItem(x, y, item) {
   return x >= item.left && x <= item.right && y >= item.top && y <= item.bottom;
+}
+
+function updateItems() {
+  const items = document.querySelectorAll(".item");
+  items.forEach((item) => {
+    item.addEventListener("touchstart", (e) => {
+      if (item.draggable === true) {
+        var touch = e.touches[0];
+        offsetX = touch.clientX - item.getBoundingClientRect().left;
+        offsetY = touch.clientY - item.getBoundingClientRect().top;
+        //the 1st index in the classlist will have the piecenumber: example "piece4"
+        currDrag = parseInt(item.classList[1].charAt(5));
+        let pieceOnBoard = movePlacedPieceOnBoard(currDrag);
+        prevItem = item;
+        movingPiece = pieceOnBoard.returnedPiece;
+        mouseDownLast = true;
+        displacement = getCurrentCoordinate(item).findDisplacementCoordinate(
+          pieceOnBoard.baseCoordinate
+        );
+      }
+    });
+    item.addEventListener("touchmove", (e) => {
+      touchMovePiece(e);
+    });
+    item.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      if (potentialLastItemTouched !== null) {
+        placePieceFunctionality(potentialLastItemTouched);
+      } else {
+        if (touchAndMove === true) {
+          putPieceBackInPiecesContainer(e);
+          touchAndMove = false;
+        }
+      }
+    });
+
+    item.addEventListener("dragover", (e) => {
+      enteringItem(e, item);
+    });
+    item.addEventListener("mousedown", (e) => {
+      if (item.draggable === true) {
+        //the 1st index in the classlist will have the piecenumber: example "piece4"
+        currDrag = parseInt(item.classList[1].charAt(5));
+        let pieceOnBoard = movePlacedPieceOnBoard(currDrag);
+        prevItem = item;
+        movingPiece = pieceOnBoard.returnedPiece;
+        mouseDownLast = true;
+        displacement = getCurrentCoordinate(item).findDisplacementCoordinate(
+          pieceOnBoard.baseCoordinate
+        );
+      }
+    });
+    item.addEventListener("dragleave", (e) => {
+      leavingItem(item);
+    });
+    item.addEventListener("mouseup", (e) => {
+      placePieceFunctionality(item);
+    });
+
+    item.addEventListener("drop", (e) => {
+      placePieceFunctionality(item);
+    });
+  });
+}
+
+function leavingItem(item) {
+  if (currDrag !== null) {
+    let findAugCords = canPutPieceOnBoardAtCoordinate(
+      movingOrRemainingPiece(currDrag).piece,
+      basicBoard,
+      getCurrentCoordinate(item).displacePiece(displacement)
+    );
+    findAugCords.augPiece.coordinates.forEach((cood) => {
+      let a = document.getElementById(cood.str).classList;
+      a.remove("p" + currDrag);
+      a.remove("invalid");
+
+      //this bottom bit of code makes sure that a piece
+      //that has already been placed will still be draggable
+      //even when dragging another piece on top of if
+      let temp = true;
+      for (let i = 0; i < a.length; i++) {
+        if (a[i].startsWith("piece")) {
+          temp = false;
+          break;
+        }
+      }
+      if (temp) {
+        document.getElementById(cood.str).draggable = false;
+      }
+    });
+  }
+}
+function putPieceBackInPiecesContainer(event) {
+  if (movingPiece !== null) {
+    event.preventDefault();
+    remainingPieces.add(movingPiece);
+    currDrag = null;
+    prevItem = null;
+    movingPiece = null;
+    updateLists();
+    updateDomBoard();
+    eventListenersForPiecesUpdater();
+  }
+}
+function touchMovePiece(e) {
+  e.preventDefault();
+  var touch = e.touches[0];
+  var x = touch.clientX - offsetX;
+  var y = touch.clientY - offsetY;
+  let touchingItem = whatItemAmITouchingOver(x, y, basicBoard.numRows);
+  touchAndMove = true;
+  if (touchingItem !== null) {
+    // console.log("touching over" + touchingItem.id);
+    if (beginningMove === 0) {
+      potentialLastItemTouched = touchingItem;
+      beginningMove = 1;
+    }
+    if (touchingItem !== potentialLastItemTouched) {
+      leavingItem(potentialLastItemTouched);
+      enteringItem(e, touchingItem);
+      potentialLastItemTouched = touchingItem;
+    }
+  } else {
+    if (potentialLastItemTouched !== null) {
+      leavingItem(potentialLastItemTouched);
+    }
+    potentialLastItemTouched = null;
+    beginningMove = 0;
+  }
+}
+
+function eventListenersForPiecesUpdater() {
+  const piecesNewStuff = document.querySelectorAll('[class^="piecelayout"]');
+  // const piecesNewStuff = document.querySelectorAll(".piecelayout5");
+  piecesNewStuff.forEach((piece) => {
+    piece.addEventListener("touchstart", (e) => {
+      currDrag = parseInt(piece.id.charAt(12));
+      var touch = e.touches[0];
+      offsetX = touch.clientX - piece.getBoundingClientRect().left;
+      offsetY = touch.clientY - piece.getBoundingClientRect().top;
+    });
+    piece.addEventListener("touchmove", (e) => {
+      touchMovePiece(e);
+    });
+    piece.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      if (potentialLastItemTouched !== null) {
+        placePieceFunctionality(potentialLastItemTouched);
+      }
+      currDrag = null;
+    });
+  });
+}
+
+function enteringItem(e, item) {
+  if (currDrag !== null) {
+    e.preventDefault();
+    let findAugCords = canPutPieceOnBoardAtCoordinate(
+      movingOrRemainingPiece(currDrag).piece,
+      basicBoard,
+      getCurrentCoordinate(item).displacePiece(displacement)
+    );
+    let classNameToAdd =
+      findAugCords.errorCode === SUCCESSFUL ? "p" + currDrag : "invalid";
+    findAugCords.augPiece.coordinates.forEach((currentCoordinate) => {
+      document
+        .getElementById(currentCoordinate.str)
+        .classList.add(classNameToAdd);
+    });
+  }
+  if (mouseDownLast && prevItem !== null) {
+    //we will always do a drag leave thing in order to bypass the
+    //glitch on the first time
+    let findAugCords = canPutPieceOnBoardAtCoordinate(
+      movingOrRemainingPiece(currDrag).piece,
+      basicBoard,
+      getCurrentCoordinate(prevItem).displacePiece(displacement)
+    );
+    findAugCords.augPiece.coordinates.forEach((cood) => {
+      document.getElementById(cood.str).classList.remove("p" + currDrag);
+      document.getElementById(cood.str).classList.remove("invalid");
+    });
+  }
+  mouseDownLast = false;
+}
+
+function generateNewGame(numRows, numCols, numGamePieces) {
+  beatGame = false;
+  basicBoard = new GameBoard(numRows, numCols);
+
+  let tempStr = "gameboard-";
+  if (numRows === 5) {
+    tempStr = tempStr + "five";
+  } else {
+    tempStr = tempStr + "six";
+  }
+  let a = document.querySelector('[id^="gameboard"]');
+  a.innerHTML = basicBoard.htmlString;
+  a.id = tempStr;
+  remainingPieces = generateRandomPieces(numRows, numCols, numGamePieces);
+
+  usedPieces = new PiecesList();
+  updateDomBoard();
+  updateLists();
+  eventListenersForPiecesUpdater();
+  updateItems();
 }

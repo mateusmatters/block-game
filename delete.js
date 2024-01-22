@@ -245,7 +245,7 @@ function generateSinglePiece(
     currCord.str = `${currCord.rowPoint}${currCord.colPoint}`;
   }
   return {
-    piece: new GamePiece(confirmedCords, numPiecesToCreate),
+    piece: new GamePiece(confirmedCords, numPiecesToCreate, board.numRows),
     board: board,
   };
 }

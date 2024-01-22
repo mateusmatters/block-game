@@ -48,3 +48,86 @@ Unhas - Nails
 Pele - Skin
 Cabelo - Hair
 Sobrancelhas - Eyebrows
+
+
+
+  // let piece1 = new GamePiece(
+  //   [
+  //     new Coordinate(0, 0),
+  //     new Coordinate(0, 1),
+  //     new Coordinate(0, 2),
+  //     new Coordinate(0, 3),
+  //     new Coordinate(0, 4),
+  //     new Coordinate(0, 5),
+  //   ],
+  //   1,
+  //   6
+  // );
+  // let piece2 = new GamePiece(
+  //   [
+  //     new Coordinate(0, 0),
+  //     new Coordinate(0, 1),
+  //     new Coordinate(0, 2),
+  //     new Coordinate(0, 3),
+  //     new Coordinate(0, 4),
+  //     new Coordinate(0, 5),
+  //   ],
+  //   2,
+  //   6
+  // );
+  // let piece3 = new GamePiece(
+  //   [
+  //     new Coordinate(0, 0),
+  //     new Coordinate(0, 1),
+  //     new Coordinate(0, 2),
+  //     new Coordinate(0, 3),
+  //     new Coordinate(0, 4),
+  //     new Coordinate(0, 5),
+  //   ],
+  //   3,
+  //   6
+  // );
+  // let piece4 = new GamePiece(
+  //   [
+  //     new Coordinate(0, 0),
+  //     new Coordinate(0, 1),
+  //     new Coordinate(0, 2),
+  //     new Coordinate(0, 3),
+  //     new Coordinate(0, 4),
+  //     new Coordinate(0, 5),
+  //   ],
+  //   4,
+  //   6
+  // );
+  // let piece5 = new GamePiece(
+  //   [
+  //     new Coordinate(0, 0),
+  //     new Coordinate(0, 1),
+  //     new Coordinate(0, 2),
+  //     new Coordinate(0, 3),
+  //     new Coordinate(0, 4),
+  //     new Coordinate(0, 5),
+  //   ],
+  //   5,
+  //   6
+  // );
+  // let piece6 = new GamePiece(
+  //   [
+  //     new Coordinate(0, 0),
+  //     new Coordinate(0, 1),
+  //     new Coordinate(0, 2),
+  //     new Coordinate(0, 3),
+  //     new Coordinate(0, 4),
+  //     new Coordinate(0, 5),
+  //   ],
+  //   6,
+  //   6
+  // );
+
+  // remainingPieces = new PiecesList();
+  // remainingPieces.add(piece1);
+  // remainingPieces.add(piece2);
+  // remainingPieces.add(piece3);
+  // remainingPieces.add(piece4);
+  // remainingPieces.add(piece5);
+  // remainingPieces.add(piece6);
