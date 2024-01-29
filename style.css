@@ -77,6 +77,9 @@
 .p8.nopiece {
   background-color: #6be8db;
 }
+.p9.nopiece {
+  background-color: #ee5ad1;
+}
 .invalid.item {
   background-color: rgb(45, 45, 45);
 }
@@ -106,6 +109,9 @@
 }
 .piece8 {
   background-color: #32b3a6;
+}
+.piece9 {
+  background-color: #b62d9a;
 }
 
 #difficulty {
